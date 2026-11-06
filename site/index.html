@@ -6,23 +6,32 @@
   <title>¿En qué número va la lista?</title>
   <meta name="description" content="Seguimiento no oficial del listado nominal ordenado de USICAMM: en qué número va la asignación de plazas docentes, vacantes y fuentes oficiales para verificarlo.">
   <meta name="robots" content="noindex">
-  <meta name="theme-color" content="#2a78d6">
+  <meta name="theme-color" content="#2a6fd0">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon-180.png">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Mi plaza">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Barra fija que aparece al bajar -->
+  <div class="mini" id="mini" aria-hidden="true">
+    <div class="mini-in">
+      <div class="mini-txt" id="mini-txt"></div>
+      <button class="icon-btn" id="mini-refresh" type="button" aria-label="Actualizar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+      </button>
+    </div>
+  </div>
+
   <div class="wrap" id="app">
     <header class="top">
-      <div class="brand">
-        <img src="icon.svg" alt="">
-        <div>
-          <h1>¿En qué número va la lista?</h1>
-          <p>Admisión USICAMM · página no oficial con datos oficiales</p>
-        </div>
+      <img src="icon.svg" alt="">
+      <div>
+        <h1>¿En qué número va la lista?</h1>
+        <p>Admisión USICAMM · página no oficial con datos oficiales</p>
       </div>
     </header>
 
@@ -33,29 +42,50 @@
       </label>
       <label class="field">
         <span>Tu lugar</span>
-        <input id="in-lugar" type="number" inputmode="numeric" min="1" placeholder="Ej. 352" aria-label="Tu lugar en la lista">
+        <input id="in-lugar" type="number" inputmode="numeric" min="1" placeholder="352" aria-label="Tu lugar en la lista">
       </label>
       <button class="btn primary" id="btn-actualizar" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
-        Actualizar
+        <span>Actualizar</span>
       </button>
     </form>
 
+    <section class="hero" id="hero" aria-live="polite">
+      <p class="eyebrow">Cargando…</p>
+      <p class="big">—</p>
+    </section>
+    <div class="stats" id="stats"></div>
+    <div id="alertas"></div>
+
     <main id="main">
-      <section class="card hero" id="hero" aria-live="polite">
-        <p class="label">Cargando…</p>
+      <section class="card" id="fila" hidden>
+        <div class="card-h">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="1.6"/><circle cx="12" cy="6" r="1.6"/><circle cx="19" cy="6" r="1.6"/><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="2.8"/><circle cx="5" cy="18" r="1.6"/><circle cx="12" cy="18" r="1.6"/></svg></span>
+          <h2>Tu lugar en la fila</h2>
+        </div>
+        <p class="sub" id="fila-sub"></p>
+        <p class="dots-cap" id="dots-cap" aria-live="polite"></p>
+        <div class="dots" id="dots" role="img"></div>
+        <div class="key" id="dots-key"></div>
       </section>
 
       <section class="card" id="cuando" hidden>
-        <h2>¿Cuándo podría tocarte?</h2>
+        <div class="card-h">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/></svg></span>
+          <h2>¿Cuándo podría tocarte?</h2>
+        </div>
         <p class="sub" id="cuando-sub"></p>
-        <ul class="est" id="cuando-lista"></ul>
+        <ul class="cyc" id="cuando-lista"></ul>
+        <div class="verdict" id="cuando-veredicto"></div>
         <p class="note" id="cuando-nota"></p>
       </section>
 
       <section class="card" id="avance" hidden>
-        <h2>Cómo ha avanzado la lista</h2>
-        <p class="sub">En qué número iba la lista en cada fecha, comparado con los ciclos anteriores de la misma lista.</p>
+        <div class="card-h">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><path d="M4 16l5-5 4 3 7-8"/></svg></span>
+          <h2>Cómo ha avanzado la lista</h2>
+        </div>
+        <p class="sub">En qué número iba la lista en cada fecha, comparado con los ciclos anteriores de la misma lista. Toca o pasa el dedo para ver cada fecha.</p>
         <div class="legend" id="chart-legend"></div>
         <div class="chart" id="chart"></div>
         <details>
@@ -65,38 +95,54 @@
       </section>
 
       <section class="card" id="eventos" hidden>
-        <h2>Movimientos de este ciclo</h2>
-        <p class="sub">Días en que SATAP registró asignaciones de esta lista. Más reciente primero.</p>
-        <div class="table-scroll" id="eventos-tabla"></div>
+        <div class="card-h">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <h2>Movimientos de este ciclo</h2>
+        </div>
+        <p class="sub">Días en que SATAP registró asignaciones de esta lista. El más reciente arriba.</p>
+        <ol class="tl" id="eventos-tl"></ol>
+        <details>
+          <summary>Ver como tabla</summary>
+          <div class="table-scroll" id="eventos-tabla"></div>
+        </details>
         <p class="note" id="eventos-nota"></p>
       </section>
 
       <section class="card" id="plazas" hidden>
-        <h2>Plazas en este momento</h2>
+        <div class="card-h">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 4l9 6"/><path d="M5 10v9h14v-9"/><path d="M10 19v-5h4v5"/></svg></span>
+          <h2>Plazas en este momento</h2>
+        </div>
         <p class="sub" id="plazas-sub"></p>
         <div id="plazas-cuerpo"></div>
       </section>
 
       <section class="card avisos" id="avisos" hidden>
-        <h2>Avisos al celular</h2>
+        <div class="card-h">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg></span>
+          <h2>Avisos al celular</h2>
+        </div>
         <p class="sub">Cada 30 minutos se revisa la lista. Si avanza o cambia tu estatus, te llega una notificación con la app gratuita <b>ntfy</b>.</p>
-        <ol class="rules" style="padding-left:20px">
+        <ol class="steps">
           <li>Instala ntfy: <a href="https://apps.apple.com/app/ntfy/id1625396347" rel="noopener" target="_blank">iPhone</a> · <a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" rel="noopener" target="_blank">Android</a>.</li>
           <li>En la app toca <b>+</b> (suscribirse) y escribe este tema:</li>
         </ol>
         <div class="topic"><code id="avisos-topic"></code><button class="btn" id="btn-copiar-topic" type="button">Copiar</button></div>
-        <ol class="rules" start="3" style="padding-left:20px">
+        <ol class="steps" start="3">
           <li>Deja el servidor como <b>ntfy.sh</b> y toca <b>Suscribirse</b>. Listo.</li>
         </ol>
         <p class="note">El tema es como una contraseña: quien lo tenga recibe los mismos avisos. No lo publiques.</p>
       </section>
 
       <section class="card" id="reglas">
-        <h2>Reglas que conviene tener presentes</h2>
+        <div class="card-h">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h6"/></svg></span>
+          <h2>Reglas que conviene tener presentes</h2>
+        </div>
         <p class="sub">Del Acuerdo de admisión en educación básica 2026-2027 (resumen; lo que vale es el texto oficial).</p>
         <ul class="rules">
           <li>Las plazas se asignan <b>en estricto orden de la lista</b>. <span class="art">Art. 33, fr. V</span></li>
-          <li>Los resultados (la lista) <b>valen hasta el 31 de mayo de 2027</b>. Después solo se dan plazas temporales hasta el 15 de agosto. <span class="art">Arts. 32 y 33, fr. IX</span></li>
+          <li>La lista <b>vale hasta el 31 de mayo de 2027</b>. Después solo se dan plazas temporales hasta el 15 de agosto. <span class="art">Arts. 32 y 33, fr. IX</span></li>
           <li>Si te ofrecen <b>solo plazas definitivas y las rechazas</b>, pasas al final de la lista. <span class="art">Art. 35, fr. IV</span></li>
           <li>Si te ofrecen definitiva y temporal y <b>eliges la temporal</b>, al terminar pasas al final. <span class="art">Art. 35, fr. V</span></li>
           <li>Si te ofrecen <b>solo temporales</b>, puedes aceptarlas o no y <b>conservas tu lugar</b>. <span class="art">Art. 35, fr. VI y VII</span></li>
@@ -106,24 +152,27 @@
       </section>
 
       <section class="card" id="fuentes">
-        <h2>Fuentes: verifícalo tú misma</h2>
+        <div class="card-h">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
+          <h2>Fuentes: verifícalo tú misma</h2>
+        </div>
         <p class="sub">Todo lo que ves aquí sale de consultas públicas de USICAMM (SATAP). Estos son los sitios oficiales y los pasos para ver los mismos datos.</p>
         <div class="src">
           <div class="src-item">
-            <span class="badge-official">Oficial · USICAMM</span>
+            <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Oficial · USICAMM</span>
             <h3>1. En qué número va la lista y el estatus de cada lugar</h3>
-            <p class="what">“Asignaciones del listado nominal ordenado”. Es la fuente de “la lista va en”, de tu estatus y de la gráfica.</p>
+            <p class="what">“Asignaciones del listado nominal ordenado”. Es la fuente de “la lista va en”, de tu estatus, de la fila de puntos y de la gráfica.</p>
             <a class="link" href="http://www03.uscmm.gob.mx:8080/ListadoNominalOrdenamiento/" target="_blank" rel="noopener">Abrir el listado nominal ordenado ↗</a>
             <ol>
               <li>Elige <b>Entidad</b>: <span data-f="entidad">Nuevo León</span> · <b>Ciclo escolar</b>: <span data-f="ciclo">2026-2027</span> · <b>Tipo educativo</b>: Educación básica · <b>Proceso</b>: Admisión.</li>
               <li>En <b>Categoría, asignatura, tipo de apreciación</b> elige <code data-f="apreciacion">ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN PRIMARIA</code> y toca <b>Descargar</b>.</li>
-              <li>Abre el Excel. Busca en la columna <b>“Posición en la lista ordenada”</b> y mira la columna <b>“Estatus”</b>. La primera posición que dice <b>“Persona en listado para su asignación”</b> es la que sigue; la anterior es en la que “va” la lista.</li>
-              <li>La columna <b>“Fecha y hora de movimiento de la plaza”</b> dice cuándo se asignó cada lugar (de ahí sale la gráfica).</li>
+              <li>Abre el Excel. Busca tu número en la columna <b>“Posición en la lista ordenada”</b> y mira la columna <b>“Estatus”</b>. La primera posición que dice <b>“Persona en listado para su asignación”</b> es la que sigue; la anterior es en la que “va” la lista.</li>
+              <li>La columna <b>“Fecha y hora de movimiento de la plaza”</b> dice cuándo se asignó cada lugar (de ahí salen la gráfica y los movimientos).</li>
             </ol>
             <p class="note" id="src-archivo"></p>
           </div>
           <div class="src-item">
-            <span class="badge-official">Oficial · USICAMM</span>
+            <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Oficial · USICAMM</span>
             <h3>2. Plazas vacantes y ocupadas</h3>
             <p class="what">“Consulta pública de vacancia y ocupación”. Es la fuente de la sección “Plazas en este momento”.</p>
             <a class="link" href="http://www03.uscmm.gob.mx:8080/ConsultaPublicaPlazas/app" target="_blank" rel="noopener">Abrir la consulta de vacancia y ocupación ↗</a>
@@ -134,7 +183,7 @@
             </ol>
           </div>
           <div class="src-item">
-            <span class="badge-official">Oficial · USICAMM</span>
+            <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Oficial · USICAMM</span>
             <h3>3. Tu lugar y tu puntaje en la lista ordenada</h3>
             <p class="what">La publicación de resultados del proceso de admisión 2026-2027 en educación básica.</p>
             <a class="link" href="http://balanceador-aplicaciones.uscmm.gob.mx/Resultados/consulta.jsp?publicacion=125" target="_blank" rel="noopener">Abrir la lista ordenada de resultados ↗</a>
@@ -144,17 +193,17 @@
             </ol>
           </div>
           <div class="src-item">
-            <span class="badge-official">Oficial · USICAMM</span>
+            <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Oficial · USICAMM</span>
             <h3>4. Las reglas</h3>
             <p class="what">El Acuerdo con las disposiciones del proceso de admisión 2026-2027 y su modificación del calendario.</p>
-            <a class="link" href="http://usicamm.sep.gob.mx/usicamm_dsk08/2026-2027/compilacion/EB/Acuerdo_Admision_EB.pdf" target="_blank" rel="noopener">Acuerdo de admisión EB 2026-2027 (PDF) ↗</a><br>
+            <a class="link" href="http://usicamm.sep.gob.mx/usicamm_dsk08/2026-2027/compilacion/EB/Acuerdo_Admision_EB.pdf" target="_blank" rel="noopener">Acuerdo de admisión EB 2026-2027 (PDF) ↗</a>
             <a class="link" href="http://usicamm.sep.gob.mx/usicamm_dsk08/2026-2027/compilacion/EB/Adenda_Acuerdo_Admision_EB_2026-2027_2.pdf" target="_blank" rel="noopener">Modificación del calendario (PDF) ↗</a>
             <ol>
               <li>Vigencia de la lista: artículo 32. Orden de asignación: artículo 33. Rechazos, temporales y faltas: artículo 35.</li>
             </ol>
           </div>
           <div class="src-item">
-            <span class="badge-official">Oficial · USICAMM</span>
+            <span class="badge-official"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Oficial · USICAMM</span>
             <h3>5. Portal de transparencia de USICAMM</h3>
             <p class="what">La página donde USICAMM enlaza todas las consultas públicas de SATAP (las de arriba incluidas).</p>
             <a class="link" href="https://usicamm.sep.gob.mx/transparencia" target="_blank" rel="noopener">usicamm.sep.gob.mx/transparencia ↗</a>
