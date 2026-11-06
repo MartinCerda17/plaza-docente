@@ -1,0 +1,52 @@
+{
+  "listas": [
+    {
+      "id": "nl-primaria",
+      "nombre": "Educación Primaria",
+      "entidad": 19,
+      "entidadNombre": "Nuevo León",
+      "nivel": 2,
+      "nivelNombre": "Educación básica",
+      "proceso": 9,
+      "procesoNombre": "Admisión",
+      "ciclos": [
+        { "ciclo": 13, "nombre": "2026-2027", "tipoEvaluacion": 260532, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN PRIMARIA", "vence": "2027-05-31" },
+        { "ciclo": 12, "nombre": "2025-2026", "tipoEvaluacion": 251572, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN PRIMARIA" },
+        { "ciclo": 11, "nombre": "2024-2025", "tipoEvaluacion": 240607, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN PRIMARIA" },
+        { "ciclo": 10, "nombre": "2023-2024", "tipoEvaluacion": 230773, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN PRIMARIA" }
+      ]
+    },
+    {
+      "id": "nl-preescolar",
+      "nombre": "Educación Preescolar",
+      "entidad": 19,
+      "entidadNombre": "Nuevo León",
+      "nivel": 2,
+      "nivelNombre": "Educación básica",
+      "proceso": 9,
+      "procesoNombre": "Admisión",
+      "ciclos": [
+        { "ciclo": 13, "nombre": "2026-2027", "tipoEvaluacion": 260530, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN PREESCOLAR", "vence": "2027-05-31" },
+        { "ciclo": 12, "nombre": "2025-2026", "tipoEvaluacion": 251472, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN PREESCOLAR" },
+        { "ciclo": 11, "nombre": "2024-2025", "tipoEvaluacion": 240395, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN PREESCOLAR" },
+        { "ciclo": 10, "nombre": "2023-2024", "tipoEvaluacion": 230707, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN PREESCOLAR" }
+      ]
+    },
+    {
+      "id": "nl-especial",
+      "nombre": "Educación Especial",
+      "entidad": 19,
+      "entidadNombre": "Nuevo León",
+      "nivel": 2,
+      "nivelNombre": "Educación básica",
+      "proceso": 9,
+      "procesoNombre": "Admisión",
+      "ciclos": [
+        { "ciclo": 13, "nombre": "2026-2027", "tipoEvaluacion": 260526, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN ESPECIAL.EDUCACIÓN ESPECIAL", "vence": "2027-05-31" },
+        { "ciclo": 12, "nombre": "2025-2026", "tipoEvaluacion": 251428, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN ESPECIAL.EDUCACIÓN ESPECIAL" },
+        { "ciclo": 11, "nombre": "2024-2025", "tipoEvaluacion": 240181, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN ESPECIAL.EDUCACIÓN ESPECIAL" },
+        { "ciclo": 10, "nombre": "2023-2024", "tipoEvaluacion": 230700, "apreciacion": "ADMISIÓN.EDUCACIÓN BÁSICA.DOCENTE.EDUCACIÓN ESPECIAL. EDUCACIÓN ESPECIAL ESPECIAL" }
+      ]
+    }
+  ]
+}

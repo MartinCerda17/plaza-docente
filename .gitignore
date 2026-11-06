@@ -1,0 +1,6 @@
+# Se generan en cada corrida (GitHub Actions las publica directo en Pages).
+site/data/*.json
+site/data/*.xlsx
+!site/data/historico/
+__pycache__/
+.DS_Store

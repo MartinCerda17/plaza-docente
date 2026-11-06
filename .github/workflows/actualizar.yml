@@ -1,0 +1,67 @@
+name: Actualizar lista
+
+on:
+  schedule:
+    # Cada 30 minutos (en minutos 7 y 37 para no caer en la hora en punto, cuando GitHub se satura).
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+    inputs:
+      prueba:
+        description: "Mandar una notificación de prueba con el estado actual"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Consultar SATAP
+        env:
+          PAGES_URL: ${{ steps.pages.outputs.base_url }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          AVISAR_LISTA: ${{ secrets.AVISAR_LISTA }}
+          AVISAR_LUGAR: ${{ secrets.AVISAR_LUGAR }}
+          NTFY_PRUEBA: ${{ github.event_name == 'workflow_dispatch' && inputs.prueba && '1' || '' }}
+        run: python3 scripts/actualizar.py
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      # GitHub apaga los workflows programados de un repo público tras 60 días sin
+      # actividad. Si el último commit tiene 40 días o más, se hace uno chiquito.
+      - name: Latido
+        run: |
+          last=$(git log -1 --format=%ct)
+          now=$(date +%s)
+          if [ $(( (now - last) / 86400 )) -ge 40 ]; then
+            date -u +%FT%TZ > .latido
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add .latido
+            git commit -m "Latido: mantener activa la consulta automática"
+            git push
+          fi
