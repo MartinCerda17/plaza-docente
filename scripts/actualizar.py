@@ -7,7 +7,7 @@ Variables de entorno (todas opcionales):
 - NTFY_TOPIC     tema secreto de ntfy.sh al que se mandan los avisos.
 - NTFY_SERVER    servidor de ntfy (por omisión https://ntfy.sh).
 - AVISAR_LISTA   id de la lista a vigilar (por omisión nl-primaria).
-- AVISAR_LUGAR   posición de la persona en esa lista (p. ej. 352).
+- AVISAR_LUGAR   posición de la persona en esa lista (p. ej. 150).
 - NTFY_PRUEBA    si vale "1", manda un aviso de prueba con el estado actual.
 
 Uso local:  python3 scripts/actualizar.py

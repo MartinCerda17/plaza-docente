@@ -25,7 +25,7 @@ GitHub Actions (cada 30 min)
 La página es genérica. Lo personal va después del `#` (nunca se manda al servidor):
 
 ```
-https://<usuario>.github.io/plaza-docente/#lista=nl-primaria&lugar=352&avisos=<tema-ntfy>
+https://<usuario>.github.io/plaza-docente/#lista=nl-primaria&lugar=150&avisos=<tema-ntfy>
 ```
 
 ## Secretos del repo (Settings → Secrets and variables → Actions)

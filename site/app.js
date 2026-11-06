@@ -117,7 +117,7 @@
   }
 
   // ------------------------------------------------------------ enlace / hash
-  // Formatos: #lista=nl-primaria&lugar=352&avisos=TEMA   o   #nl-primaria/352
+  // Formatos: #lista=nl-primaria&lugar=150&avisos=TEMA   o   #nl-primaria/150
   function leerHash() {
     const raw = decodeURIComponent(location.hash.replace(/^#/, ""));
     const out = {};
